@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../powerpivot article styles/eustat.css">
+    <script src="https://kit.fontawesome.com/2a79539d66.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <a href="../index.html"> <img class="logo" src="../imgs/HexapodaLogo.png" alt="Hexapoda logo"></a>
+        <nav>
+            <ul class="nav_links">
+
+                <li class="dropdown"><a href="#articles" class="dropbtn">Articles</a>
+                    <i class="fa fa-caret-down"></i>
+                    <div class="dropdown-content">
+                        <a href="../podstranky/powerpivot.html">Power Pivot</a>
+                        <a href="../podstranky/powerquery.html">Power Query</a>
+                        <a href="../podstranky/msexcel.html">MS Excel</a>
+                        <a href="../podstranky/msaccess.html">MS Access</a>
+                    </div>
+                </li>
+
+                <li><a href="../About me/aboutme.html">About Me</a></li>
+                <li><a href="https://www.kosmas.cz/knihy/170398/excel-vba-vyukovy-kurz/">Book</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="content-wrapper">
+        <article>
+            <header class="poster">
+                <div class="wrapper">
+                    <div class="hpart">
+                        <div>
+                            <h1>Importing Local EU Statistics</h1>
+                            <em>In this article, we create a basic simple model in Excel PowerPivot and show how to
+                                define few
+                                simple, but yet powerful DAX formulae.
+                            </em>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="entry-content">
+                <main>
+                    <div class="post-content">
+                        <h2>1 Source</h2>
+                        <p>The task is to import statistical data containing area and population according to local LAU
+                                classification for each country.</p>
+                        <p>For this purpose, we will use the following file:</p>
+                        <p><a href="https://1drv.ms/x/s!Au3_LzJe1RmcsXq-oAyk0blyX9d1?e=4ryFG1">https://1drv.ms/x/s!Au3_LzJe1RmcsXq-oAyk0blyX9d1?e=4ryFG1</a></p>
+                        <p><img src="../eustat imgs/B01.JPG" alt=""></p>
+                        <p>As we can see, the data source is not usable for inter-country comparisons, as the detailed data are
+                                on a separate list for every country. Also, there is no relationship to the NUTS hierarchy of the EU
+                                besides NUTS code of level 3.</p>
+                        <p>Our task is to get a clean data set containing data for all the local regions. In the next chapter, we will
+                                use PowerPivot to demonstrate simple analysis based on the datasets obtained in this and in the
+                                previous chapters.</p>
+                        <h2>2 Loading Data</h2>
+                        <p>Open a new Excel workbook, click on Data =&gt; Get &amp; Transform Data =&gt; From Web. Paste this link:</p>
+                        <p><a href="https://1drv.ms/x/s!Au3_LzJe1RmcsXq-oAyk0blyX9d1?e=b60m0E">https://1drv.ms/x/s!Au3_LzJe1RmcsXq-oAyk0blyX9d1?e=b60m0E</a></p>
+                        <p><img src="../eustat imgs/B02.JPG" alt=""></p>
+                        <p>For demonstrative purposes, we will load only data from six countries. Check “Select multiple items”,
+                                select six countries according to the picture and click Transform Data. The data for respective
+                                countries are now loaded as separate queries.</p>
+                        <ul>
+                            <li>Click “Close &amp; Load” =&gt; “Close and Load to…”=&gt; Select
+                                    Connection Only and click OK.</li>
+                        </ul>
+                        <p><img src="../eustat imgs/B04.JPG" alt=""></p>
+                        <h2>3 Appending Data</h2>
+                        <div class="important">
+                            <p class="important-text">! Important !</p>
+                            <p>When appending the data, Power Query can’t know which columns should be appended and which
+                                    not. So, if for example in one query there is an additional column (or the same column with
+                                    misspelled name), the result will treat this column as a new column, where all rows for other queries
+                                    will return Null! On our example, it is the case with Germany, where the usual column “TOTAL AREA
+                                    (m2)” is missing, and the query contains “TOTAL AREA (km2)” instead. Not only that the data is
+                                    inconsistent, but also the resulting query contains two columns - “TOTAL AREA (m2)” containing data
+                                    for all countries except Germany, and “TOTAL AREA (km2)”containing data only for Germany!</p>
+                            <p>The cure is to double-check all the columns that we want to keep in all files. We must rename the
+                                    columns, create a new calculated ones, etc., for consistency.</p>
+                            <p>So in our particular case, we adjust the “DE” query by adding a Custom column named “TOTAL AREA
+                                    (m2)” with the following simple formula:</p>
+                        </div>
+                        <p><mark>= [ #&quot;TOTAL  AREA  (km2)&quot;] *1000</mark></p>
+                        <p>Finally, we remove the original column containing inconsistent data.</p>
+                        <p>So, after all data consistency checks and corrections in the underlying queries have been done, we
+                                create a blank query and then we append all the data to it:</p>
+                        <ul>
+                            <li>In Power Query window, right-click somewhere in the Queries pane (should be on the left),
+                                    select New Query =&gt; Other Sources =&gt; Blank Query</li>
+                            <li>Rename the Query to “AppendedData” and in the formula bar, type the reference to the first
+                                    query - =#”AT”. The first country will load to the Power Query window</li>
+                            
+
+                        </ul>
+                        <p><img src="../eustat imgs/B05.JPG" alt=""></p>
+                        <ul>
+                            <li>On Home tab and Combine group, click “Append queries”</li>
+                            <li>Hold Ctrl and select the remaining countries, click “Add”.</li>
+                        </ul>
+                        <p><img src="../eustat imgs/B06.JPG" alt=""></p>
+                        <ul>
+                            <li>Click OK and the query loads consolidated data.</li>
+                        </ul>
+                        <p><img src="../eustat imgs/B07.JPG" alt=""></p>
+                        <ul>
+                            <li>The last thing we need to do here is to get rid of all the columns besides NUTS, LAU, Area and
+                                    Population fields. Maybe we can also rename the columns into something that is consistent
+                                    with the names used in the previous chapter.</li>
+                            <li>Click “Close &amp; Load”.</li>
+                        </ul>
+                        <p><img src="../eustat imgs/B08.JPG" alt=""></p>
+                        
+
+                    </div>
+                </main>
+            </div>
+        </article>
+    </div>
+</body>
+
+</html>

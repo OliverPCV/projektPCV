@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../powerpivot article styles/eunuts.css">
+    <script src="https://kit.fontawesome.com/2a79539d66.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <a href="../index.html"> <img class="logo" src="../imgs/HexapodaLogo.png" alt="Hexapoda logo"></a>
+        <nav>
+            <ul class="nav_links">
+
+                <li class="dropdown"><a href="#articles" class="dropbtn">Articles</a>
+                    <i class="fa fa-caret-down"></i>
+                    <div class="dropdown-content">
+                        <a href="../podstranky/powerpivot.html">Power Pivot</a>
+                        <a href="../podstranky/powerquery.html">Power Query</a>
+                        <a href="../podstranky/msexcel.html">MS Excel</a>
+                        <a href="../podstranky/msaccess.html">MS Access</a>
+                    </div>
+                </li>
+                <li><a href="../About me/aboutme.html">About Me</a></li>
+                <li><a href="https://www.kosmas.cz/knihy/170398/excel-vba-vyukovy-kurz/">Book</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="content-wrapper">
+        <article>
+            <header class="poster">
+                <div class="wrapper">
+                    <div class="hpart">
+                        <div>
+                            <h1>Calculating EU Statistics</h1>
+                            <em>In this article, we create a basic simple model in Excel PowerPivot and show how to
+                                define few
+                                simple, but yet powerful DAX formulae.
+                            </em>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="entry-content">
+                <main>
+                    <div class="post-content">
+                        <p>We will use two files created in other articles. The first one is the flat EU NUTS hierarchy
+                            (link), and
+                            the second one containing data is the basic EU LAU statistics, created here (link).</p>
+                        <h2>1 Creating Data Model</h2>
+                        <p>First, open a new Excel workbook and load both queries we created before. The easiest way is
+                            to
+                            export both connection files from the original workbooks and load them into separate sheets
+                            of the
+                            new workbook. This is done via Data =&gt; Existing connections. You can also copy the lists
+                            of the
+                            original workbook into the new one.</p>
+                        <ul>
+                            <li>Load both files into tables and rename them to “NUTS” and “Data”.</li>
+                            <li>Click into the first table, go to PowerPivot =&gt; Add to Data Model</li>
+                            <li>Repeat for the second table</li>
+                        </ul>
+                        <p>You should have now both tables in the PowerPivot window:</p>
+                        <p><img src="../calceustat imgs/C01.JPG" alt=""> </p>
+                        <p>Next, you need to define a relationship between the two tables so that every row of the Data
+                            table
+                            can find the corresponding row in the NUTS table with regional description of the row. Click
+                            on
+                            Diagram View and drag the NUTSCodeLevel3 field of the Data table on top of NUTSCodeLevel3
+                            field
+                            in the NUTS table.</p>
+                        <p><img src="../calceustat imgs /C02.JPG" alt=""> </p>
+                        <p>Let go the mouse button and the relationship is created. The arrow tells you that the
+                            filtering will run
+                            from the NUTS table to the data table, that is, by filtering the regions you will be
+                            actually filtering also
+                            the data table.</p>
+                        <p><img src="../calceustat imgs/C03.JPG" alt=""> </p>
+                        <p>The relationship is one-to-many, that means that every row in the data table corresponds to
+                            one and
+                            only one row in the lookup table with the regions.</p>
+                        <p>You can close the PowerPivot window now and insert a new blank worksheet if needed.</p>
+                        <h2>2 Creating measures</h2>
+                        <p>Now, let’s create our first pivot table based on PowerPivot data model. First, insert a blank
+                            pivot
+                            table into the worksheet and choose “Use external Data Source” and This Workbook Data Model
+                            as
+                            data source.</p>
+                        <p><img src="../calceustat imgs/C04.JPG" alt=""> </p>
+                        <p>Next, drag the Country field of the NUTS table into the Rows box:</p>
+                        <p><img src="../calceustat imgs/C05.JPG" alt=""> </p>
+                        <p>Now we will add our first measure, which is a name the PowerPivot uses for the formulae
+                            written in
+                            its specific language, DAX. DAX looks similar to Excel formulae, but it is very different
+                            and much more
+                            powerful. You can imagine it being a mixture of SQL and Excel, because one formula can
+                            perform
+                            filtering and calculation in the same time. Moreover, every DAX formula always takes the
+                            filter and
+                            row context into consideration simultaneously. The filter context comes from any filter that
+                            applies
+                            to any particular cell of the pivot table, no matter if it comes from slicer, row header,
+                            column header,
+                            filter, etc. The row context is more hidden but it is related to the fact that the data
+                            model always
+                            consists of tables with rows, called also records in database world. So for example if we
+                            write a DAX
+                            formula that iterates across all the rows, one by one, at each evaluation step the row
+                            context is
+                            present. Detailed explanation is beyond scope of this article.</p>
+                        <p>The first simple measure that we create will return the sum of population:</p>
+                        <ul>
+                            <li>Click on Power Pivot tab, click Measure =&gt; New measure.</li>
+                            <li>Fill the dialog like this:</li>
+                        </ul>
+                        <p><img src="../calceustat imgs/C06.JPG" alt=""> </p>
+                        <p><b><em>Table Name</em></b>: Select the Data table. It has no impact on calculation but it
+                            tells the engine which table
+                            the measure is associated with. You see the measure then as additional field of this table
+                            in the Pivot
+                            table Fields pane.</p>
+                        <p><b><em>Measure Name</em></b>: Any name that does not exist in the model yet (not even as a
+                            column name of the
+                            underlying model).</p>
+                        <p><b><em>Description</em></b>: optionally describe what the measure is intended to do.</p>
+                        <p><b><em>Formula</em></b>: Enter the formula in DAX syntax. You can click Check formula to
+                            verify syntax.</p>
+                        <p><b><em>Formatting Options</em></b>: This is very useful dialog part, because once you
+                            associate format with the
+                            measure, it will always be applied automatically.</p>
+                        <ul>
+                            <li>Click OK to create the measure and get this result:</li>
+                        </ul>
+                        <p><img src="../calceustat imgs/C07.JPG" alt=""></p>
+                        <p>Several things happened. First of all, the list of countries got substantially shorter. This
+                            is because
+                            DAX has a built-in feature called Autoexist, which automatically hides the filters which do
+                            not contain
+                            any data (remember that when we created the sample query, we selected only few countries?).
+                        </p>
+                        <p>Second, there is a mysterious country called “(blank)”. These are summed rows of the Data
+                            table,
+                            that do not have any counterpart in the NUTS table. We can find why this happened when we
+                            display
+                            also the region codes from the Data table. Drag the NUTSCodeLevel3 of Data table into the
+                            Rows
+                            box, and collapse all fields except “(Blank)”:</p>
+                        <p><img src="../calceustat imgs/C08.JPG" alt=""></p>
+                        <p>How this happened? It is very simple. The classification of NUTS in EU develops with time and
+                            so
+                            some regions were merged in the last version and got new code, which can’t be found in the
+                            data
+                            table. In real world, one must either to consolidate the data in the data table or adjust
+                            the lookup
+                            table accordingly to ensure data integrity. In fact, it turns out that preparation of
+                            consistent data
+                            model usually takes 80% of the time, 15% takes coding of the DAX measures, and only 5% is
+                            the
+                            cherries, that is, what the user really sees.</p>
+                        <p>Cautious reader may recall that in the data query, we selected also Cyprus, but is missing in
+                            the table.
+                            Why? Because the data table for Cyprus did not contain any data about population.</p>
+                        <p>For our purpose in order to “clean” the report, we click on the filter arrow next to “Row
+                            labels” and
+                            unselect “(blank)”. It will have no serious impact on the demonstration.</p>
+                        <ul>
+                            <li>Now, let’s create a second measure – Total Area in km2.</li>
+                        </ul>
+                        <p><img src="../calceustat imgs/C09.JPG" alt=""></p>
+                        <p>And we get this result:</p>
+                        <p><img src="../calceustat imgs/C10.JPG" alt=""></p>
+                        <p>You see that Cyprus now appeared on the list. This because while Data has no data for
+                            population, it
+                            however contains data for area. That’s why Autoexist returned the Cyprus filter back to the
+                            table.</p>
+                        <p>Finally, let’s use the created measures and calculate density per km2. The formula is</p>
+                        <p><mark>Density:=DIVIDE([Total Population];[Total Area (km2)])</mark>
+                        </p>
+                        <p>We get the following result:</p>
+                        <p><img src="../calceustat imgs/C11.JPG" alt=""></p>
+                        <p>You can notice two things. First, there is no result for Cyprus, because the DIVIDE() formula
+                            automatically handled the division by zero error as blank (you can define another error
+                            output if you
+                            want).</p>
+                        <p>Second, if you examine the Grand Total row, you can find out that the total density of
+                            selected
+                            countries is calculated as total population divided by total area, but Cyprus is missing in
+                            the total
+                            area. How to handle this depends on the business logic of your report. For example, you can
+                            decide
+                            that the grand total row should be calculated excluding Cyprus.</p>
+                        <p>Without any deep explanation, this is the formula handling the total row differently from the
+                            detail
+                            rows:</p>
+                        <p><mark>Density Handled:</mark></p>
+                        <p><mark> =if(</mark></p>
+                        <p><mark>           HASONEVALUE(NUTS[Country]);</mark></p>
+                        <p><mark>                 [Density];</mark></p>
+                        <p><mark>                 DIVIDE([Total Population];</mark></p>
+                        <p><mark>                       CALCULATE([Total Area (km2)];NUTS[CountryCode]&lt;&gt;&quot;CY&quot;)</mark></p>
+                        <p><mark>                       )</mark></p>
+                        <p><mark>           )</mark></p>
+
+                        <p>The HASONEVALUE function decides if we are in the grand total row (False). In that case, it
+                            triggers
+                            CALCULATE() function in the denominator of the DIVIDE() function which modifies the filter
+                            to
+                            exclude Cyprus from the Total Area calculation. That is why for grand total, we get slightly
+                            different result. The difference is of course small due to relatively small influence of Cyprus area on the total
+                            result:</p>
+                        <p><img src="../calceustat imgs/C12.JPG" alt=""></p>
+                        <p>This is only a small example, but it shows how powerful DAX engine is compared to simple Excel pivot
+                                table calculated fields.</p>
+
+                    </div>
+                </main>
+            </div>
+        </article>
+    </div>
+</body>
+
+</html>

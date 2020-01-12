@@ -6,7 +6,12 @@
     padding: 0;
     
 }
-
+body{
+    font-family: 'Nunito',sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+}
 
 /*
 Nav bar
@@ -36,6 +41,8 @@ header{
 
 .nav_links{
     list-style: none;
+    position: relative;
+  display: inline-block;
 }
 
 .nav_links li {
@@ -46,57 +53,39 @@ header{
 .nav_links li a{
     transition: all 0.3s ease 0s;
 }
-.nav_links li a:hover{
+.dropdown{
+ display: inline-block;
+}
+.nav_links li a:hover, .dropdown:hover .dropbtn{
     color: rgb(243, 103, 10);
 }
+li.dropdown {
+    display: inline-block;
+}
 
-.search-box {   
-    height: 40px;   
-    border-radius: 40px;   
-    padding: 10px;   
-}
-   
-.search-box:hover > .search-txt {   
-    width: 240px;   
-    padding: 0 6px;   
-}
-   
-   
-   
-.search-box:hover > .search-btn {   
-    background: white;   
-    color: rgb(221, 24, 24);   
-} 
-.search-btn {   
-    color:  rgb(243, 103, 10);   
-    width: 40px;   
-    height: 40px;   
-    border-radius: 50%;   
-    display: flex;   
-    justify-content: center;   
-    align-items: center;   
-    transition: 0.4s;       
-    cursor: pointer;   
-}
-.search-btn > i {   
-    font-size: 30px;   
-}
-   
-   
-   
-.search-txt {   
-    border: none;   
-    background: none;   
-    outline: none;   
-    float: left;   
-    padding: 0;   
-    color: rgb(221, 24, 24);   
-    font-size: 16px;   
-    transition: 0.4s;   
-    line-height: 40px;   
-    width: 0px;   
-    font-weight: bold;
-}
+.dropdown-content {
+
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 50px;
+    
+    padding: 12px 16px;
+    z-index: 1;
+  }
+  .dropdown-content a {
+    color:rgb(221, 24, 24) ;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+
 /* Nav Bar end
 */
 
@@ -130,23 +119,74 @@ span{
 .con-logo{
     height: 100px;
     width: 100px;
+    overflow: auto;
 }
 /* container end
 */
 
+.content-main{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 80vh;
+    width: 100%;
+
+}
+.content{
+    width: 50%;
+    font-size: 20px;
+    
+}
+.content h1{
+    font-size: 50px;
+    margin-left: 50px;
+    font-family: "Montserrat", sans-serif;
+}
+.content  img{
+    float: right;
+    margin-right: 100px;
+    width: 400;
+    height: 400;
+    border-radius: 100%;
+    
+}
+.content p{
+    padding: 15px;
+    margin-left: 100px;
+}
+ .author {
+    overflow: auto;
+    text-align: center;
+}
+.author img{
+    border-radius: 100%;
+}
 /* content
 */
-.articles{
+
+.content-wrapper{
+    padding: 1px 0 30px 0;
+    width: 100%;
+    height: 90vh;
+}
+.wrapper{
+    padding: 0 30px;
+    margin: 0 auto;
+    overflow: hidden;
     font-family: 'Montserrat',sans-serif;
     font-size: 16px;
     line-height: 1.6;
     display: flex;
     flex-flow: row wrap;
 }
-.item{
-    margin: 50px;
+.article{
+    padding: 10px 20px;
 }
-.item > img{
+.item,.item2, .item3,.item4{
+   margin: 0 auto;
+    
+}
+.item > img, .item2 > img, .item3 > img,.item4 > img{
     height: 150px;
     display: inline-block;
     vertical-align: middle;
@@ -155,6 +195,7 @@ span{
     color: black;
     font-size: 30px;
 }
+
 .item button{
     display: block;
     width: 30%;
@@ -165,6 +206,7 @@ span{
     border: none;
     background-color: rgb(145, 213, 43);
     border-radius: 10px;
+    outline: 0;
 }
 .item button:hover{
     background-color: rgb(132, 194, 38);
@@ -185,6 +227,127 @@ span{
     color: rgb(145, 213, 43);
 }
 
+
+.item2 button{
+    display: block;
+    width: 30%;
+    height: 40px;
+    margin-left: auto;
+    color: black;
+    cursor: pointer;
+    border: none;
+    background-color: rgb(43, 100, 213);
+    border-radius: 10px;
+    outline: 0;
+}
+.item2 button:hover{
+    background-color: rgb(65, 76, 196);
+}
+.item2-container{
+    display: inline-block;
+    vertical-align: middle;
+    padding: 20px;
+    height: 200px;
+    width: 500px;
+}
+.item2-container h1 a{
+    font-size: 30px;
+    font-family: "Montserrat", sans-serif;
+    color: black;
+}
+.item2-container span{
+    color: rgb(65, 76, 196);
+}
+
+.item3 button{
+    display: block;
+    width: 30%;
+    height: 40px;
+    margin-left: auto;
+    color: black;
+    cursor: pointer;
+    border: none;
+    background-color: rgb(221, 29, 29);
+    border-radius: 10px;
+    outline: 0;
+}
+.item3 button:hover{
+    background-color: rgb(169, 22, 22);
+}
+.item3-container{
+    display: inline-block;
+    vertical-align: middle;
+    padding: 20px;
+    height: 200px;
+    width: 500px;
+}
+.item3-container h1 a{
+    font-size: 30px;
+    font-family: "Montserrat", sans-serif;
+    color: black;
+}
+.item3-container span{
+    color: rgb(221, 29, 29);
+}
+
+
+.item4 button{
+    display: block;
+    width: 30%;
+    height: 40px;
+    margin-left: auto;
+    color: black;
+    cursor: pointer;
+    border: none;
+    background-color: rgb(251, 138, 31);
+    border-radius: 10px;
+    outline: 0;
+}
+.item4 button:hover{
+    background-color: rgb(230, 129, 22);
+}
+.item4-container{
+    display: inline-block;
+    vertical-align: middle;
+    padding: 20px;
+    height: 200px;
+    width: 500px;
+}
+.item4-container h1 a{
+    font-size: 30px;
+    font-family: "Montserrat", sans-serif;
+    color: black;
+}
+.item4-container span{
+    color: rgb(251, 138, 31);
+}
+
+
+
 /* content end
 */
 
+.main{
+    background: #333;
+    color: #fff;
+    
+    margin-top: auto;
+    
+   
+}
+
+.main img{
+    height: 600px;
+    width: 800px;
+}
+.main .copy{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #999;
+    font-family: Arial,sans-serif;
+    font-size: 11px;
+    width: 100%;
+    height: 20px;
+}

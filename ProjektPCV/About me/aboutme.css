@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:500&display=swap');
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    
+}
+body{
+    font-family: 'Nunito',sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+}
+
+
+/*
+Nav bar
+*/
+
+li, a, button{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size:16px;
+    color: rgb(221, 24, 24);
+    text-decoration: none;
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 5%;
+}
+
+.logo{
+    cursor: pointer;
+    height: 40px;
+    width: 140px;
+    
+
+}
+
+.nav_links{
+    list-style: none;
+    position: relative;
+  display: inline-block;
+}
+
+.nav_links li {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.nav_links li a{
+    transition: all 0.3s ease 0s;
+}
+.dropdown{
+ display: inline-block;
+}
+.nav_links li a:hover, .dropdown:hover .dropbtn{
+    color: rgb(243, 103, 10);
+}
+li.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 50px;
+    
+    padding: 12px 16px;
+    z-index: 1;
+  }
+  .dropdown-content a {
+    color:rgb(221, 24, 24) ;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }

@@ -13,25 +13,28 @@
 
 <body>
     <header>
-        <img class="logo" src="imgs/Hexapoda.jpg" alt="Hexapoda logo">
+        <img class="logo" src="imgs/HexapodaLogo.png" alt="Hexapoda logo">
         <nav>
             <ul class="nav_links">
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Articles</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Book</a></li>
+                
+                <li class="dropdown"><a href="#articles" class="dropbtn">Articles</a>
+                    <i class="fa fa-caret-down"></i>
+                    <div class="dropdown-content">
+                            <a href="./podstranky/powerpivot.html">Power Pivot</a>
+                            <a href="./podstranky/powerquery.html">Power Query</a>
+                            <a href="./podstranky/msexcel.html">MS Excel</a>
+                            <a href="./podstranky/msaccess.html">MS Access</a>
+                    </div>
+                </li>
+                
+                <li><a href="./About me/aboutme.html">About Me</a></li>
+                <li><a href="https://www.kosmas.cz/knihy/170398/excel-vba-vyukovy-kurz/">Book</a></li>
             </ul>
         </nav>
-        <div class="search-box">
-            <input type="text" name="" class="search-txt" placeholder="Type to search" />
-            <a class="search-btn" href="#">
-                <i class="fas fa-search"></i>
-            </a>
-
-        </div>
+        
     </header>
     <div class="container">
-        <img class="con-logo" src="imgs/Scarabeus2.jpg" alt="Hexapoda logo">
+        <img class="con-logo" src="imgs/HexapodaSmallLogo.png" alt="Hexapoda logo">
         <h2 class="sub-headline">
             <span>W</span>elcome <span>T</span>o
         </h2>
@@ -39,21 +42,76 @@
             <span>H</span>exapoda
         </h1>
     </div>
-
-    <div class="articles">
-        <div class="item">
-                <img class="item-img" src="imgs/powerpivot.jpg" alt="Power Pivot logo">
-            <div class="item-container">
+    <div class="content-main">
+    <div class="content">
+        <h1>About the site</h1>
         
-                <h1><a href="#">Power Pivot <span>Articles</span></a></h1>
+       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam esse reprehenderit corporis minima voluptatum accusamus tempora, voluptates porro repellendus optio corrupti quos a rerum fugiat, ipsa quisquam qui consequatur ea.
+       </p>        
+    </div>
+    <div class="author">
+            <img src="./imgs/dad2.jpg" alt="dad">
+            <h2>Martin Král</h2>
+            <em>Author</em>
+    </div>
+    </div>
+
+    <div class="content-wrapper">
+    <div class="wrapper" >
+        
+        <div class="item">
+                <article>
+            <div class="item-container">
+                <h1><a name="articles" >Power Pivot <span>Articles</span></a></h1>
                 <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce nibh. Suspendisse nisl. Etiam dictum
                     tincidunt diam. Pellentesque arcu. Donec iaculis gravida nulla. Ut enim ad minim veniam, q</p>
             </div>
-            <button class="item-button">Read More <i class="fas fa-arrow-right"></i> </button>
+            <a href="./podstranky/powerpivot.html"> <button class="item-button">Read More <i class="fas fa-arrow-right"></i> </button></a>
+
+        </article>
         </div>
+        
+        <div class="item2">
+            <article>
+            <div class="item2-container">
+                <h1><a href="./podstranky/powerquery.html">Power Query <span>Articles</span></a></h1>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce nibh. Suspendisse nisl. Etiam dictum
+                tincidunt diam. Pellentesque arcu. Donec iaculis gravida nulla. Ut enim ad minim veniam, q</p>
+            </div>
+            <a href="./podstranky/powerquery.html"><button class="item-button">Read More <i class="fas fa-arrow-right"></i> </button></a>
+        </article>
+         </div>
+        <div class="item3">
+            <article>
+                <div class="item3-container">
+                <h1><a href="./podstranky/msexcel.html">MS Excel <span>Articles</span></a></h1>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce nibh. Suspendisse nisl. Etiam dictum
+                tincidunt diam. Pellentesque arcu. Donec iaculis gravida nulla. Ut enim ad minim veniam, q</p>
+            </div>
+            <a href="./podstranky/msexcel.html"><button class="item-button">Read More <i class="fas fa-arrow-right"></i> </button></a>
+        </article>
+        </div>
+        <div class="item4">
+            <article>
+            <div class="item4-container">
+                <h1><a href="./podstranky/msaccess.html">MS Access <span>Articles</span></a></h1>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce nibh. Suspendisse nisl. Etiam dictum
+        tincidunt diam. Pellentesque arcu. Donec iaculis gravida nulla. Ut enim ad minim veniam, q</p>
+            </div>
+            <a href="./podstranky/msaccess.html"><button class="item-button">Read More <i class="fas fa-arrow-right"></i> </button></a>
+        </article>
+        </div>
+        
     </div>
+</div>
 
-
+    <footer class="main">
+        
+        <div class="copy">
+            2020 © Hexapoda. All rights are reserved.
+        </div>
+    </footer>
 </body>
+
 
 </html>

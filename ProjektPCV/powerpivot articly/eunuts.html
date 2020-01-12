@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../powerpivot article styles/eunuts.css">
+    <script src="https://kit.fontawesome.com/2a79539d66.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <a href="../index.html"> <img class="logo" src="../imgs/HexapodaLogo.png" alt="Hexapoda logo"></a>
+        <nav>
+            <ul class="nav_links">
+
+                <li class="dropdown"><a href="#articles" class="dropbtn">Articles</a>
+                    <i class="fa fa-caret-down"></i>
+                    <div class="dropdown-content">
+                        <a href="../podstranky/powerpivot.html">Power Pivot</a>
+                        <a href="../podstranky/powerquery.html">Power Query</a>
+                        <a href="../podstranky/msexcel.html">MS Excel</a>
+                        <a href="../podstranky/msaccess.html">MS Access</a>
+                    </div>
+                </li>
+
+                <li><a href="../About me/aboutme.html">About Me</a></li>
+                <li><a href="https://www.kosmas.cz/knihy/170398/excel-vba-vyukovy-kurz/">Book</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="content-wrapper">
+        <article>
+            <header class="poster">
+                <div class="wrapper">
+                    <div class="hpart">
+                        <div>
+                            <h1>Creating EU NUTS Hierarchy</h1>
+                            <em>In this article, we create a basic simple model in Excel PowerPivot and show how to
+                                define few
+                                simple, but yet powerful DAX formulae.
+                            </em>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="entry-content">
+                <main>
+                    <div class="post-content">
+                        <h2>1 Source</h2>
+                        <p>The task is to create a NUTS Level 1-3 hierarchy For this task, we will use the following
+                            file, containing
+                            the latest 2016 EU NUTS classification:</p>
+                        <p><a
+                                href="https://1drv.ms/x/s!Au3_LzJe1RmcsXvhOzkwoG88wewX?e=kuCGh8">https://1drv.ms/x/s!Au3_LzJe1RmcsXvhOzkwoG88wewX?e=kuCGh8</a>
+                        </p>
+                        <p><img src="../eunut imgs/A01.JPG" alt=""></p>
+                        <p>It is obvious that the file is not usable for any reasonable data analysis, mainly, due to
+                            the following
+                            reasons:</p>
+                        <ul>
+                            <li>There is no relationship between the child and the parent</li>
+                            <li>There is no column containing all the regional names regardless of level</li>
+                        </ul>
+                        <p>Our task is to create two types of hierarchies based on this file:</p>
+                        <ul>
+                            <li>Flat hierarchy, where the primary index column will be the NUTS code of the third level.
+                                Each
+                                row will contain also information about parents on higher levels (Country, 1 st , and 2
+                                nd levels)¨</li>
+                            <li>Self-join hierarchy, where every row will contain a foreign (parent) key, uniquely
+                                assigning
+                                the child to its parent.</li>
+                        </ul>
+                        <h2>Preparing NUTS Hierarchy</h2>
+                        <h3>2.1 Loading Data</h3>
+                        <p>Open a new Excel workbook</p>
+                        <ul>
+                            <li>click on Data =&gt; Get &amp; Transform Data =&gt; From Web. Paste the source
+                                link.</li>
+                        </ul>
+                        <p><img src="../eunut imgs/A02.JPG" alt=""></p>
+                        <ul>
+                            <li>Click OK, select NUTS2013-NUTS2016 item, click Transform Data. The table is now loaded
+                                into Power
+                                Query, ready for further transformation.</li>
+                        </ul>
+                        <p><img src="../eunut imgs/A03.JPG" alt=""></p>
+                        <h3>2.2 Basic Transformation</h3>
+                        <ul>
+                            <li>Click Transform =&gt; Use First Row as Headers.</li>
+                            <li>Click the filter arrow in column header “Code 2016”, unselect “(null)”.</li>
+                            <li>Make sure the list is sorted properly – click “Column 1”, sort in ascending order.</li>
+                            <div class="important">
+                                <li>
+                                    <p class="important-text">! Important !</p>
+                                </li>
+                                <p>If the list does not contain a sorting code, you must be careful about how it is
+                                    sorted,
+                                    because the fill-down techniques below rely on exact sorting.</p>
+
+                            </div>
+                            <li>Select column “Code 2016”, hold Ctrl, and select also these columns: “Country”, “NUTS
+                                level
+                                1-3”, “level”.</li>
+                            <li>Click Home =&gt; Remove Columns =&gt; Remove Other Columns</li>
+                            <li>We are now left with clean list of NUTS hierarchy, ready for further transformation:
+                            </li>
+
+                        </ul>
+                        <p><img src="../eunut imgs/A05.JPG" alt=""></p>
+                        <h3>2.3 Flattening the Hierarchy</h3>
+                        <p>In this step, we fill in the superordinate regional names and codes to each row.</p>
+                        <h4>2.3.1 Handling Country Level</h4>
+                        <ul>
+                            <li>Select the columns “Country” and click Transform =&gt; Fill =&gt; Down.</li>
+                        </ul>
+                        <p><img src="../eunut imgs/A06.JPG" alt=""></p>
+                        <p>You might be tempted to do the same fill-down trick for the other columns, but you need to be
+                            careful. If you examine the rows where the regions change closely, you see that if we used
+                            plain Fill-
+                            down for NUTS Level1, the region from above would be wrongly inserted:</p>
+                        <p><img src="../eunut imgs/A07.JPG" alt=""></p>
+                        <p>What we need is to put a “stop sign” on the rows with the hierarchy level less than the one
+                            we
+                            currently process before we let Power Query to fill down the list. For this purpose, we add
+                            new
+                            column, write a formula that will fill in “Dummy” value for lower levels and leave current
+                            level intact.</p>
+                        <p>First, in order to finish the country level, we add the column with country code. There are
+                            no issues
+                            with overlapping <em>Null</em> values, so no need to play with a “stop sign” here:</p>
+                        <ul>
+                            <li>Click Add Column =&gt; Custom Column=&gt; Change the column name to “CountryCode”, and
+                                enter the following formula:
+                                <p><mark>= if [level]=0 then [Code 2016] else null</mark></p>
+                            </li>
+                            <li>With the “CountryCode” column still selected, click Transform =&gt; Fill =&gt; Down.
+                            </li>
+                            <li>Move the “CountryCode” column before the Country column.</li>
+
+                        </ul>
+                        <h4>2.3.2 Handling NUTS levels 1-3</h4>
+                        <p>Now, with respect to the above, we fill in the NUTS Name and NUTS Code for level 1:</p>
+                        <ul>
+                            <li>Click Add Column =&gt; Custom Column=&gt; Change the column name to “NUTSLevel1”, and
+                                enter the following formula:
+                                <p><mark>= if [level] &lt;= 0 then &quot;Dummy&quot; else [NUTS level 1]</mark></p>
+                            </li>
+                            <li>With the “NUTSLevel1” column still selected, click Transform =&gt; Fill =&gt; Down.</li>
+                            <li>Move the column after the “Country” column</li>
+                            <li>Delete the old “NUTS Level 1” column, we don’t need it anymore</li>
+                        </ul>
+                        <p>In the result we see that the regions were filled correctly. No overlap of Belgian regions
+                            into Bulgaria
+                            for example. We will turn the dummy value back to the original Null values later.</p>
+                        <p><img src="../eunut imgs/A08.JPG" alt=""></p>
+                        <p>Next step will be filling the code of the NUTS regions level 1. What we need is to create a
+                            new
+                            column, but a dummy value into the lower levels, inherit the code (field [Code 2016]) from
+                            the
+                            current level, and put <em>Null</em> value into the rest:</p>
+                        <ul>
+                            <li>Click Add Column =&gt; Custom Column=&gt; Change the column name to “NUTSCodeLevel1”,
+                                and
+                                enter the following formula:
+                                <p>= if [level]&lt;1 then &quot;Dummy&quot; else if [level]=1 then [Code 2016]
+                                    else null</p>
+                            </li>
+                            <li>With the “NUTSCodeLevel1” column still selected, click Transform =&gt; Fill =&gt; Down.
+                            </li>
+                            <li>Move the column after the “Country” column</li>
+                        </ul>
+                        <p>Now repeat the same for levels 2 and 3 with the following formulae in the custom columns:</p>
+                        <ul>
+                            <li><strong>NUTSLevel2:</strong>
+                                <p><mark>= if [level] &lt;= 1 then &quot;Dummy&quot; else [NUTS level 2]</mark></p>
+                            </li>
+                            <li><strong>NUTSCodeLevel2:</strong>
+                                <p><mark>= if [level]&lt;2 then &quot;Dummy&quot; else if [level]=2 then [Code 2016]
+                                        else null</mark></p>
+                            </li>
+                            <li><strong>NUTSLevel3:</strong>
+                                <p><mark>= if [level] &lt;= 2 then &quot;Dummy&quot; else [NUTS level 3]</mark></p>
+                            </li>
+                            <li><strong>NUTSCodeLevel3:</strong>
+                                <p><mark>= if [level]&lt;3 then &quot;Dummy&quot; else if [level]=3 then [Code 2016]
+                                        else null</mark></p>
+                            </li>
+                        </ul>
+                        <p>Finally, we delete the original “NUTS Level 2” and “NUTS Level 3” columns and we are left
+                            with a
+                            clean list of regional hierarchy:</p>
+                        <p>Finally, select the six new custom columns containing Level1-3 data and replace the value
+                            “Dummy”
+                            with the original <em>Null</em>.</p>
+                        <p>Transform =&gt; Replace Values</p>
+                        <p><img src="../eunut imgs/A09.JPG" alt=""></p>
+                        <p>Change the name in the Properties textbox into something meaningful (I used NUTSBaseQuery)
+                            and
+                            we are done. In the final step, we create the two types of hierarchies.</p>
+                        <h2>3 Creating NUTS Hierarchy</h2>
+                        <p>From now on, with the query from chapter 2. saved as “NUTSBaseQuery”, we have two options how
+                            to proceed. Either we create a flat file with the lowest regional level code as primary key,
+                            or we
+                            create a self-join hierarchy table, also known as child-parent join.</p>
+                        <p>The former approach has benefit that it’s directly usable in data model for joining fact data
+                            on Level3
+                            code and fast regional filtering. The latter approach needs further processing in BI, but
+                            you can join
+                            fact data on any level, creating kind of “bill of materials” analysis.</p>
+                        <p>Based on our query, it’s easy to create both.</p>
+                        <h3>3.1 Flat Hierarchy</h3>
+                        <p>The result of the base query actually contains all the data we need. All we need to do is to filter the
+                                third level and delete not used columns.</p>
+                        <ul>
+                            <li>In the Power Query window, right-click somewhere in the Queries pane (should be on the
+                                    left), select New Query =&gt; Other Sources =&gt; Blank Query</li>
+                            <li>Rename the Query to “NUTSFlat” and in the formula bar, type the reference to the base we
+                                    created in Chapter2: - =#”NUTSBaseQuery”.</li>
+                        </ul>
+                        <p><img src="../eunut imgs/A10.JPG" alt=""></p>
+                        <ul>
+                            <li>Click on the filter arrow in the “level” column, select 3, click OK.</li>
+                            <li>Now you can delete the columns “Code 2016” and “level”</li>
+                        </ul>
+                        <p><img src="../eunut imgs/A11.JPG" alt=""></p>
+                        <p>You are done. As a final touch, you can reshuffle the columns so that the primary key
+                                (NUTSCodeLevel3) is in the first column, but it has no impact on usability.</p>
+                        <h3>3.2 Self-Join Hierarchy</h3>
+                        <p>The final output will consist only of three columns: Primary Key (code) of the region, name of the
+                                region, and Foreign Key of the parent region.</p>
+                        <p>First, create a new query again with the base query as a source:</p>
+                        <ul>
+                            <li>In the Power Query window, right-click somewhere in the Queries pane (should be on the
+                                    left), select New Query =&gt; Other Sources =&gt; Blank Query</li>
+                            <li>Rename the Query to “NUTSSelfJoin” and in the formula bar, type the reference to the base
+                                    we created in Chapter2: - =#”NUTSBaseQuery”.</li>
+                        </ul>
+                        <p>First we need to generate a column with all the names.</p>
+                        <ul>
+                            <li>Add a new custom column, rename to NUTSName and enter this formula:
+                                <p>=if [level] = 0 then[Country] else if [level] = 1 then
+                                        [NUTSLevel1] else if [level] = 2 then [NUTSLevel2] else
+                                        [NUTSLevel3]</p>
+                            </li>
+                            <li>Move the column to the second position</li>
+                            <li>Rename the first column (“Code 2016”) to “NUTSCode”</li>
+                        </ul>
+                        <p><img src="../eunut imgs/A12.JPG" alt=""></p>
+                        <p>Now we create the column with the parent region code.</p>
+                        <ul>
+                            <li>Add a new custom column, rename to NUTSParentCode and enter this formula:
+                                <p>=if [level] = 0 then null else if [level] = 1 then
+                                        [CountryCode] else if [level] = 2 then [NUTSCodeLevel1] else
+                                        [NUTSCodeLevel2])</p>
+                            </li>
+                            <li>Move the column to the third position.</li>
+                            <li>Delete all columns but the first three.</li>
+                        </ul>
+                        <p>You are done now. You can use the result of this query in any system that can handle hierarchies,
+                                even in Power BI or SQL Server.</p>
+                        <p><img src="../eunut imgs/A13.JPG" alt=""></p>
+                    </div>
+                </main>
+                <div class="more-content">
+                        <div class="author">
+                            <div class="section-caption">
+                                Posts by author
+                            </div>
+                            <div class="post-author">
+                                <ul>
+                                    <li><a href="../powerpivot articly/eunuts.html">Creating EU NUTS Hierarchy</a></li>
+                                    <li><a href="../powerpivot articly/eustat.html">Importing Local EU Statistics</a></li>
+                                    <li><a href="../powerpivot articly/calceustat.html">Calculating EU Statistics</a></li>
+        
+                                </ul>
+                            </div>
+        
+                        </div>
+                    </div>
+            </div>
+        </article>
+        
+    </div>
+    
+</body>
+
+</html>
